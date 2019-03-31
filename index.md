@@ -4,34 +4,40 @@ the pipeline creation, set the YAML to:
 
 ```
 # Node.js
-# Build a general Node.js application with npm.
+# Build a general Node.js project with npm.
 # Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/vsts/pipelines/languages/javascript
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- master
 
 pool:
-  vmImage: 'Ubuntu 16.04'
+  vmImage: 'Ubuntu-16.04'
 
 steps:
 - task: NodeTool@0
   inputs:
-    versionSpec: '8.x'
+    versionSpec: '10.x'
   displayName: 'Install Node.js'
 
-- script: npm install
-  displayName: 'npm install'
-
-- script: npm run build
-  displayName: 'npm run build'
-
-- script: npm test
-  displayName: 'npm test'
+- script: |
+    npm install
+    npm run build
+    npm run test
+  displayName: 'npm install and build'
 
 - task: PublishTestResults@2
   displayName: 'Publish Test Results'
   condition: succeededOrFailed()
   inputs:
     testResultsFiles: 'out/test-results.xml'
+
+- task: PublishCodeCoverageResults@1
+  inputs:
+    codeCoverageTool: 'cobertura'
+    summaryFileLocation: 'coverage/cobertura-coverage.xml'
+    reportDirectory: 'coverage/report'
 ```
 
-The existing `npm test` step will produce both console output and the
-JUnit-style test output.
+The existing `npm test` step will produce both console output, the
+JUnit-style test output and code coverage reports.
