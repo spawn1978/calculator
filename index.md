@@ -33,6 +33,7 @@ steps:
     testResultsFiles: 'out/test-results.xml'
 
 - task: PublishCodeCoverageResults@1
+  displayName: 'Publish Code Coverage Results'
   inputs:
     codeCoverageTool: 'cobertura'
     summaryFileLocation: 'coverage/cobertura-coverage.xml'
