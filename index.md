@@ -42,3 +42,18 @@ steps:
 
 The existing `npm test` step will produce both console output, the
 JUnit-style test output and code coverage reports.
+
+To package this up for release:
+
+```
+- task: ArchiveFiles@1
+  displayName: Archive Files 
+  inputs:
+    includeRootFolder: false
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish Site
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    ArtifactName: calculator
+```
